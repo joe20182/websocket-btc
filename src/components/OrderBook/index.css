@@ -1,0 +1,45 @@
+.order-book {
+  width: 360px;
+  background-color: var(--main-bg-color);
+  color: var(--text-color);
+  padding: 0 20px;
+}
+.order-book .quote-td {
+  color: var(--th-color);
+}
+.order-row {
+  display: flex;
+  gap: 5px;
+}
+.quote-bar {
+  transition: 0.2s;
+}
+.quote-bar:hover {
+  background-color: var(--quote-hover-bg);
+}
+/* .sell-quote .order-col:first-child {
+  color: var(--sell-text-color);
+}
+.buy-quote .order-col:first-child {
+  color: var(--buy-text-color);
+} */
+.order-col {
+  /* flex: 1 1 33.333%; */
+  text-align: right;
+}
+.order-col:first-child {
+  flex: 1 1 35%;
+  text-align: left;
+}
+.order-col:nth-child(2) {
+  flex: 1 1 25%;
+}
+.order-col:nth-child(3) {
+  flex: 1 1 40%;
+}
+.sell-text {
+  color: var(--sell-text-color);
+}
+.buy-text {
+  color: var(--buy-text-color);
+}
