@@ -43,3 +43,25 @@
 .buy-text {
   color: var(--buy-text-color);
 }
+.flash-red {
+  animation: flashRed 0.3s ease;
+}
+.flash-green {
+  animation: flashgreen 0.3s ease;
+}
+@keyframes flashRed {
+  0% {
+    background-color: var(--flash-red-bg);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+@keyframes flashgreen {
+  0% {
+    background-color: var(--flash-green-bg);
+  }
+  100% {
+    background-color: transparent;
+  }
+}

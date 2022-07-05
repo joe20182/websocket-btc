@@ -12,7 +12,20 @@ import useGetQuote from "../../hooks/useGetQuotes";
 
 // mapping quotes which have been displayed before
 const sellQuotesShowed = new Set();
+const getSellQuoteClass = (price) => {
+  let classes = "order-row quote-bar sell-quote";
+  if (!sellQuotesShowed.has(price)) classes += " flash-red";
+  return classes;
+};
 
+const getSizeClass = (item) => {
+  let classes = "order-col";
+  if (item.trend === "up") classes += " flash-red";
+  else if (item.trend === "down") classes += " flash-green";
+  return classes;
+};
+
+// TODO: 改成用function，不然目前會落後一個render且改用state感覺也不好
 const totalArr = [];
 
 const OrderBook = () => {
@@ -21,16 +34,26 @@ const OrderBook = () => {
   // const displayedSellQuotes = sellQuotes.slice(0, 8);
   const displayedSellQuotes = sellQuotes
     .filter((item) => item.size !== "0")
-    .slice(0, 8);
+    .slice(0, 8)
+    .sort((a, b) => b.price - a.price);
 
   useEffect(() => {
     // console.log(displayedSellQuotes);
-    displayedSellQuotes.forEach((item, i) => {
+    for (let i = displayedSellQuotes.length - 1; i >= 0; i--) {
       // caculate total size
-      totalArr[i] = i === 0 ? +item.size : totalArr[i - 1] + +item.size;
+      totalArr[i] =
+        i === displayedSellQuotes.length - 1
+          ? +displayedSellQuotes[i].size
+          : totalArr[i + 1] + +displayedSellQuotes[i].size;
       // see if the price showed before
-      sellQuotesShowed.add(item.price);
-    });
+      sellQuotesShowed.add(displayedSellQuotes[i].price);
+    }
+    // displayedSellQuotes.forEach((item, i) => {
+    //   // caculate total size
+    //   totalArr[i] = i === 0 ? +item.size : totalArr[i - 1] + +item.size;
+    //   // see if the price showed before
+    //   sellQuotesShowed.add(item.price);
+    // });
   }, [displayedSellQuotes]);
 
   return (
@@ -44,9 +67,9 @@ const OrderBook = () => {
       </div>
       {/* sell */}
       {displayedSellQuotes.map((data, i) => (
-        <div className="order-row quote-bar sell-quote" key={data.price}>
+        <div className={getSellQuoteClass(data.price)} key={data.price}>
           <div className="order-col sell-text">{data.price}</div>
-          <div className="order-col">{data.size}</div>
+          <div className={getSizeClass(data)}>{data.size}</div>
           <div className="order-col">{totalArr[i]}</div>
         </div>
       ))}
