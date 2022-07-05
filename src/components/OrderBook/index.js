@@ -2,37 +2,36 @@ import { useEffect, useState } from "react";
 import "./index.css";
 import useGetQuote from "../../hooks/useGetQuotes";
 
-const displayedSellQuotes = [
-  {
-    price: "21,731.0",
-    size: "2,116",
-    total: "29,027",
-  },
-  {
-    price: "21,729.0",
-    size: "1,195",
-    total: "26,911",
-  },
-  {
-    price: "21,727.0",
-    size: "836",
-    total: "24,916",
-  },
-  {
-    price: "21,721.5",
-    size: "53",
-    total: "24,080",
-  },
-];
+// const displayedSellQuotes = [
+//   {
+//     price: "21,731.0",
+//     size: "2,116",
+//     total: "29,027",
+//   },
+// ];
+
+// mapping quotes which have been displayed before
+const sellQuotesShowed = new Set();
+
+const totalArr = [];
 
 const OrderBook = () => {
-  // const { sellQuotes } = useGetQuote();
+  const { sellQuotes } = useGetQuote();
 
   // const displayedSellQuotes = sellQuotes.slice(0, 8);
+  const displayedSellQuotes = sellQuotes
+    .filter((item) => item.size !== "0")
+    .slice(0, 8);
 
-  // useEffect(() => {
-  //   console.log(sellQuotes);
-  // }, [sellQuotes]);
+  useEffect(() => {
+    // console.log(displayedSellQuotes);
+    displayedSellQuotes.forEach((item, i) => {
+      // caculate total size
+      totalArr[i] = i === 0 ? +item.size : totalArr[i - 1] + +item.size;
+      // see if the price showed before
+      sellQuotesShowed.add(item.price);
+    });
+  }, [displayedSellQuotes]);
 
   return (
     <div className="order-book">
@@ -44,11 +43,11 @@ const OrderBook = () => {
         <div className="order-col">Total</div>
       </div>
       {/* sell */}
-      {displayedSellQuotes.map((data) => (
+      {displayedSellQuotes.map((data, i) => (
         <div className="order-row quote-bar sell-quote" key={data.price}>
           <div className="order-col sell-text">{data.price}</div>
           <div className="order-col">{data.size}</div>
-          <div className="order-col">123</div>
+          <div className="order-col">{totalArr[i]}</div>
         </div>
       ))}
       <h3 className="current-price">21,678.0</h3>

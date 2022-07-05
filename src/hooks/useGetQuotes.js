@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import useWebSocket from "react-use-websocket";
 
-// mapping quotes which have been displayed before
-const sellQuotesShowed = {};
-
 const useGetQuote = () => {
   const [sellQuotes, setSellQuotes] = useState([]);
   // const [buyQuotes, setBuyQuotes] = useState([])
