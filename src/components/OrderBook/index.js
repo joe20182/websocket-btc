@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import "./index.css";
 import useGetQuote from "../../hooks/useGetQuotes";
+import { addComma } from "../../utils/format";
 
 // const displayedSellQuotes = [
 //   {
@@ -82,10 +83,10 @@ const OrderBook = () => {
       {/* sell */}
       {displayedSellQuotes.map((data, i) => (
         <div className={getSellQuoteClass(data.price)} key={data.price}>
-          <div className="order-col sell-text">{data.price}</div>
-          <div className={getSizeClass(data)}>{data.size}</div>
+          <div className="order-col sell-text">{addComma(data.price)}</div>
+          <div className={getSizeClass(data)}>{addComma(data.size)}</div>
           <div className="order-col">
-            {totalSellSizeArr[i]}
+            {addComma(totalSellSizeArr[i])}
             <div
               className="percentage-bar"
               style={getWidthPercentage(totalSellSizeArr[i])}
