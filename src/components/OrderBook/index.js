@@ -10,6 +10,9 @@ import useGetQuote from "../../hooks/useGetQuotes";
 //   },
 // ];
 
+// TODO: 改成用function，不然目前會落後一個render且改用state感覺也不好
+const totalArr = [];
+
 // mapping quotes which have been displayed before
 const sellQuotesShowed = new Set();
 const getSellQuoteClass = (price) => {
@@ -18,15 +21,18 @@ const getSellQuoteClass = (price) => {
   return classes;
 };
 
-const getSizeClass = (item) => {
+const getSizeClass = (data) => {
   let classes = "order-col";
-  if (item.trend === "up") classes += " flash-red";
-  else if (item.trend === "down") classes += " flash-green";
+  if (data.trend === "up") classes += " flash-red";
+  else if (data.trend === "down") classes += " flash-green";
   return classes;
 };
 
-// TODO: 改成用function，不然目前會落後一個render且改用state感覺也不好
-const totalArr = [];
+const getWidthPercentage = (value) => {
+  const p = Math.ceil((value / totalArr[0]) * 100);
+  // console.log(value / totalArr[0]);
+  return { width: `${p}%` };
+};
 
 const OrderBook = () => {
   const { sellQuotes } = useGetQuote();
@@ -48,6 +54,8 @@ const OrderBook = () => {
       // see if the price showed before
       sellQuotesShowed.add(displayedSellQuotes[i].price);
     }
+    // console.log(totalArr);
+
     // displayedSellQuotes.forEach((item, i) => {
     //   // caculate total size
     //   totalArr[i] = i === 0 ? +item.size : totalArr[i - 1] + +item.size;
@@ -70,7 +78,13 @@ const OrderBook = () => {
         <div className={getSellQuoteClass(data.price)} key={data.price}>
           <div className="order-col sell-text">{data.price}</div>
           <div className={getSizeClass(data)}>{data.size}</div>
-          <div className="order-col">{totalArr[i]}</div>
+          <div className="order-col">
+            {totalArr[i]}
+            <div
+              className="percentage-bar"
+              style={getWidthPercentage(totalArr[i])}
+            />
+          </div>
         </div>
       ))}
       <h3 className="current-price">21,678.0</h3>

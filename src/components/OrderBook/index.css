@@ -26,6 +26,7 @@
 .order-col {
   /* flex: 1 1 33.333%; */
   text-align: right;
+  position: relative;
 }
 .order-col:first-child {
   flex: 1 1 35%;
@@ -48,6 +49,19 @@
 }
 .flash-green {
   animation: flashgreen 0.3s ease;
+}
+.percentage-bar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  /* width: 30%; */
+  height: 100%;
+}
+.sell-quote .percentage-bar {
+  background-color: var(--sell-acc-bar-bg);
+}
+.buy-quote .percentage-bar {
+  background-color: var(--buy-acc-bar-bg);
 }
 @keyframes flashRed {
   0% {
