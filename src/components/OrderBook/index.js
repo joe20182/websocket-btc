@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import "./index.css";
 import useGetQuote from "../../hooks/useGetQuotes";
 
@@ -28,20 +28,19 @@ const getSizeClass = (data) => {
   return classes;
 };
 
-const getWidthPercentage = (value) => {
-  const p = Math.ceil((value / totalArr[0]) * 100);
-  // console.log(value / totalArr[0]);
-  return { width: `${p}%` };
-};
-
 const OrderBook = () => {
   const { sellQuotes } = useGetQuote();
+  const [totalSellSizeArr, setTotalSellSizeArr] = useState([]);
 
   // const displayedSellQuotes = sellQuotes.slice(0, 8);
-  const displayedSellQuotes = sellQuotes
-    .filter((item) => item.size !== "0")
-    .slice(0, 8)
-    .sort((a, b) => b.price - a.price);
+  const displayedSellQuotes = useMemo(
+    () =>
+      sellQuotes
+        .filter((item) => item.size !== "0")
+        .slice(0, 8)
+        .sort((a, b) => b.price - a.price),
+    [sellQuotes]
+  );
 
   useEffect(() => {
     // console.log(displayedSellQuotes);
@@ -51,6 +50,7 @@ const OrderBook = () => {
         i === displayedSellQuotes.length - 1
           ? +displayedSellQuotes[i].size
           : totalArr[i + 1] + +displayedSellQuotes[i].size;
+      setTotalSellSizeArr(totalArr);
       // see if the price showed before
       sellQuotesShowed.add(displayedSellQuotes[i].price);
     }
@@ -63,6 +63,12 @@ const OrderBook = () => {
     //   sellQuotesShowed.add(item.price);
     // });
   }, [displayedSellQuotes]);
+
+  const getWidthPercentage = (value) => {
+    const p = Math.ceil((value / totalSellSizeArr[0]) * 100);
+    // console.log(value / totalSellSizeArr[0]);
+    return { width: `${p}%` };
+  };
 
   return (
     <div className="order-book">
@@ -79,10 +85,10 @@ const OrderBook = () => {
           <div className="order-col sell-text">{data.price}</div>
           <div className={getSizeClass(data)}>{data.size}</div>
           <div className="order-col">
-            {totalArr[i]}
+            {totalSellSizeArr[i]}
             <div
               className="percentage-bar"
-              style={getWidthPercentage(totalArr[i])}
+              style={getWidthPercentage(totalSellSizeArr[i])}
             />
           </div>
         </div>
