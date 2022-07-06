@@ -3,7 +3,7 @@ import useWebSocket from "react-use-websocket";
 
 const useGetQuote = () => {
   const [sellQuotes, setSellQuotes] = useState([]);
-  // const [buyQuotes, setBuyQuotes] = useState([])
+  const [buyQuotes, setBuyQuotes] = useState([]);
   const { sendJsonMessage, getWebSocket } = useWebSocket(
     "wss://ws.btse.com/ws/oss/futures",
     {
@@ -17,14 +17,14 @@ const useGetQuote = () => {
   const messageHandler = (data) => {
     if (data.topic === "update:BTCPFC") {
       // console.log(data.data.asks, data.data.bids);
+
+      // sell
       setSellQuotes((oldQuotes) => {
         const newQuotes = [...oldQuotes];
         data.data.asks.forEach((ask) => {
           const i = newQuotes.findIndex((q) => q.price === ask[0]);
           if (i >= 0) {
             // price existed -> replace
-            // console.log("existed", newQuotes[i], ask);
-            // newQuotes[i] = ask;
             newQuotes[i] = {
               price: ask[0],
               size: ask[1],
@@ -37,10 +37,39 @@ const useGetQuote = () => {
             };
           } else {
             // new price
-            // newQuotes.push(ask);
             newQuotes.push({
               price: ask[0],
               size: ask[1],
+              trend: "none",
+            });
+          }
+        });
+        newQuotes.sort((a, b) => a.price - b.price);
+        return newQuotes;
+      });
+
+      // buy
+      setBuyQuotes((oldQuotes) => {
+        const newQuotes = [...oldQuotes];
+        data.data.bids.forEach((bid) => {
+          const i = newQuotes.findIndex((q) => q.price === bid[0]);
+          if (i >= 0) {
+            // price existed -> replace
+            newQuotes[i] = {
+              price: bid[0],
+              size: bid[1],
+              trend:
+                bid[1] === newQuotes[i].size
+                  ? "none"
+                  : bid[1] > newQuotes[i].size
+                  ? "up"
+                  : "down",
+            };
+          } else {
+            // new price
+            newQuotes.push({
+              price: bid[0],
+              size: bid[1],
               trend: "none",
             });
           }
@@ -52,7 +81,6 @@ const useGetQuote = () => {
   };
 
   useEffect(() => {
-    // console.log(getWebSocket);
     sendJsonMessage({
       op: "subscribe",
       args: ["update:BTCPFC"],
@@ -61,6 +89,7 @@ const useGetQuote = () => {
 
   return {
     sellQuotes,
+    buyQuotes,
   };
 };
 

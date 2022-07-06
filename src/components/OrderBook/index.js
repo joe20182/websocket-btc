@@ -11,14 +11,17 @@ import { addComma } from "../../utils/format";
 //   },
 // ];
 
-// TODO: 改成用function，不然目前會落後一個render且改用state感覺也不好
-const totalArr = [];
-
 // mapping quotes which have been displayed before
 const sellQuotesShowed = new Set();
+const buyQuotesShowed = new Set();
 const getSellQuoteClass = (price) => {
   let classes = "order-row quote-bar sell-quote";
   if (!sellQuotesShowed.has(price)) classes += " flash-red";
+  return classes;
+};
+const getBuyQuoteClass = (price) => {
+  let classes = "order-row quote-bar buy-quote";
+  if (!buyQuotesShowed.has(price)) classes += " flash-green";
   return classes;
 };
 
@@ -30,8 +33,9 @@ const getSizeClass = (data) => {
 };
 
 const OrderBook = () => {
-  const { sellQuotes } = useGetQuote();
+  const { sellQuotes, buyQuotes } = useGetQuote();
   const [totalSellSizeArr, setTotalSellSizeArr] = useState([]);
+  const [totalBuySizeArr, setTotalBuySizeArr] = useState([]);
 
   // const displayedSellQuotes = sellQuotes.slice(0, 8);
   const displayedSellQuotes = useMemo(
@@ -43,18 +47,28 @@ const OrderBook = () => {
     [sellQuotes]
   );
 
+  const displayedBuyQuotes = useMemo(
+    () =>
+      buyQuotes
+        .filter((item) => item.size !== "0")
+        .slice(0, 8)
+        .sort((a, b) => b.price - a.price),
+    [buyQuotes]
+  );
+
   useEffect(() => {
     // console.log(displayedSellQuotes);
+    const totalArr = [];
     for (let i = displayedSellQuotes.length - 1; i >= 0; i--) {
       // caculate total size
       totalArr[i] =
         i === displayedSellQuotes.length - 1
           ? +displayedSellQuotes[i].size
           : totalArr[i + 1] + +displayedSellQuotes[i].size;
-      setTotalSellSizeArr(totalArr);
       // see if the price showed before
       sellQuotesShowed.add(displayedSellQuotes[i].price);
     }
+    setTotalSellSizeArr(totalArr);
     // console.log(totalArr);
 
     // displayedSellQuotes.forEach((item, i) => {
@@ -65,8 +79,40 @@ const OrderBook = () => {
     // });
   }, [displayedSellQuotes]);
 
-  const getWidthPercentage = (value) => {
+  useEffect(() => {
+    // console.log(displayedSellQuotes);
+    const totalArr = [];
+    // for (let i = displayedSellQuotes.length - 1; i >= 0; i--) {
+    //   // caculate total size
+    //   totalArr[i] =
+    //     i === displayedSellQuotes.length - 1
+    //       ? +displayedSellQuotes[i].size
+    //       : totalArr[i + 1] + +displayedSellQuotes[i].size;
+    //   // see if the price showed before
+    //   sellQuotesShowed.add(displayedSellQuotes[i].price);
+    // }
+    // setTotalSellSizeArr(totalArr);
+    // console.log(totalArr);
+
+    displayedBuyQuotes.forEach((item, i) => {
+      // caculate total size
+      totalArr[i] = i === 0 ? +item.size : totalArr[i - 1] + +item.size;
+      // see if the price showed before
+      sellQuotesShowed.add(item.price);
+    });
+    setTotalBuySizeArr(totalArr);
+  }, [displayedBuyQuotes]);
+
+  const getSellWidthPercentage = (value) => {
     const p = Math.ceil((value / totalSellSizeArr[0]) * 100);
+    // console.log(value / totalSellSizeArr[0]);
+    return { width: `${p}%` };
+  };
+
+  const getBuyWidthPercentage = (value) => {
+    const p = Math.ceil(
+      (value / totalBuySizeArr[totalBuySizeArr.length - 1]) * 100
+    );
     // console.log(value / totalSellSizeArr[0]);
     return { width: `${p}%` };
   };
@@ -89,18 +135,31 @@ const OrderBook = () => {
             {addComma(totalSellSizeArr[i])}
             <div
               className="percentage-bar"
-              style={getWidthPercentage(totalSellSizeArr[i])}
+              style={getSellWidthPercentage(totalSellSizeArr[i])}
             />
           </div>
         </div>
       ))}
       <h3 className="current-price">21,678.0</h3>
       {/* buy */}
-      <div className="order-row quote-bar buy-quote">
+      {displayedBuyQuotes.map((data, i) => (
+        <div className={getBuyQuoteClass(data.price)} key={data.price}>
+          <div className="order-col buy-text">{addComma(data.price)}</div>
+          <div className={getSizeClass(data)}>{addComma(data.size)}</div>
+          <div className="order-col">
+            {addComma(totalBuySizeArr[i])}
+            <div
+              className="percentage-bar"
+              style={getBuyWidthPercentage(totalBuySizeArr[i])}
+            />
+          </div>
+        </div>
+      ))}
+      {/* <div className="order-row quote-bar buy-quote">
         <div className="order-col buy-text">21,731.0</div>
         <div className="order-col">2,116</div>
         <div className="order-col">29,027</div>
-      </div>
+      </div> */}
     </div>
   );
 };
