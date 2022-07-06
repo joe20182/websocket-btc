@@ -2,7 +2,7 @@
   width: 360px;
   background-color: var(--main-bg-color);
   color: var(--text-color);
-  /* padding: 0 20px; */
+  padding-bottom: 10px;
 }
 .order-book .quote-td {
   color: var(--th-color);
@@ -10,7 +10,7 @@
 .order-row {
   display: flex;
   gap: 5px;
-  padding: 0 20px;
+  padding: 0 10px;
 }
 .quote-bar {
   transition: 0.2s;
@@ -18,14 +18,7 @@
 .quote-bar:hover {
   background-color: var(--quote-hover-bg);
 }
-/* .sell-quote .order-col:first-child {
-  color: var(--sell-text-color);
-}
-.buy-quote .order-col:first-child {
-  color: var(--buy-text-color);
-} */
 .order-col {
-  /* flex: 1 1 33.333%; */
   text-align: right;
   position: relative;
 }

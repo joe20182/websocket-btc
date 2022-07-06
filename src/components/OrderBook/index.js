@@ -70,7 +70,7 @@ const OrderBook = () => {
       // caculate total size
       totalArr[i] = i === 0 ? +item.size : totalArr[i - 1] + +item.size;
       // see if the price showed before
-      sellQuotesShowed.add(item.price);
+      buyQuotesShowed.add(item.price);
     });
     setTotalBuySizeArr(totalArr);
   }, [displayedBuyQuotes]);
