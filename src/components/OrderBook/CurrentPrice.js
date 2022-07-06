@@ -7,7 +7,9 @@ const CurrentPrice = () => {
   const { currentPrice, previousPrice } = useGetCurrentPrice();
 
   const arrowType =
-    currentPrice === previousPrice
+    currentPrice === null
+      ? ""
+      : currentPrice === previousPrice
       ? "same"
       : currentPrice > previousPrice
       ? "increase"
@@ -15,7 +17,11 @@ const CurrentPrice = () => {
 
   return (
     <h3 className={`current-price ${arrowType}`}>
-      <span>{addComma(currentPrice && currentPrice.toFixed(1))}</span>
+      <span>
+        {currentPrice === null
+          ? ""
+          : addComma(currentPrice && currentPrice.toFixed(1))}
+      </span>
       <ArrowImg />
     </h3>
   );

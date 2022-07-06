@@ -22,24 +22,25 @@ const useGetQuote = () => {
       setSellQuotes((oldQuotes) => {
         const newQuotes = [...oldQuotes];
         data.data.asks.forEach((ask) => {
-          const i = newQuotes.findIndex((q) => q.price === ask[0]);
+          const [curPrice, curSize] = ask;
+          const i = newQuotes.findIndex((q) => q.price === curPrice);
           if (i >= 0) {
             // price existed -> replace
             newQuotes[i] = {
-              price: ask[0],
-              size: ask[1],
+              price: curPrice,
+              size: curSize,
               trend:
-                ask[1] === newQuotes[i].size
+                curSize === newQuotes[i].size
                   ? "none"
-                  : ask[1] > newQuotes[i].size
+                  : curSize > newQuotes[i].size
                   ? "up"
                   : "down",
             };
           } else {
             // new price
             newQuotes.push({
-              price: ask[0],
-              size: ask[1],
+              price: curPrice,
+              size: curSize,
               trend: "none",
             });
           }
@@ -52,24 +53,25 @@ const useGetQuote = () => {
       setBuyQuotes((oldQuotes) => {
         const newQuotes = [...oldQuotes];
         data.data.bids.forEach((bid) => {
-          const i = newQuotes.findIndex((q) => q.price === bid[0]);
+          const [curPrice, curSize] = bid;
+          const i = newQuotes.findIndex((q) => q.price === curPrice);
           if (i >= 0) {
             // price existed -> replace
             newQuotes[i] = {
-              price: bid[0],
-              size: bid[1],
+              price: curPrice,
+              size: curSize,
               trend:
-                bid[1] === newQuotes[i].size
+                curSize === newQuotes[i].size
                   ? "none"
-                  : bid[1] > newQuotes[i].size
+                  : curSize > newQuotes[i].size
                   ? "up"
                   : "down",
             };
           } else {
             // new price
             newQuotes.push({
-              price: bid[0],
-              size: bid[1],
+              price: curPrice,
+              size: curSize,
               trend: "none",
             });
           }
