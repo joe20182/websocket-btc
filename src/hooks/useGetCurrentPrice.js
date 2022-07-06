@@ -8,8 +8,8 @@ const useGetCurrentPrice = () => {
   const { sendJsonMessage, getWebSocket } = useWebSocket(
     "wss://ws.btse.com/ws/futures",
     {
-      onOpen: () => console.log("opened"),
-      onClose: () => console.log("closed"),
+      // onOpen: () => console.log("opened"),
+      // onClose: () => console.log("closed"),
       shouldReconnect: () => true,
       onMessage: (e) => messageHandler(JSON.parse(e.data)),
     }
