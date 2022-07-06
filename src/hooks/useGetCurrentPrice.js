@@ -18,7 +18,7 @@ const useGetCurrentPrice = () => {
   const messageHandler = (data) => {
     // console.log(data);
     if (data.topic === "tradeHistoryApi") {
-      // console.log(data.data);
+      // console.log(data.data[0].price);
       setCurrentPrice(data.data[0].price);
     }
   };

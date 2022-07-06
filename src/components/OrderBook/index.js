@@ -1,16 +1,8 @@
 import { useEffect, useState, useMemo } from "react";
 import "./index.css";
 import useGetQuote from "../../hooks/useGetQuotes";
-import useGetCurrentPrice from "../../hooks/useGetCurrentPrice";
 import { addComma } from "../../utils/format";
-
-// const displayedSellQuotes = [
-//   {
-//     price: "21,731.0",
-//     size: "2,116",
-//     total: "29,027",
-//   },
-// ];
+import CurrentPrice from "./CurrentPrice";
 
 // mapping quotes which have been displayed before
 const sellQuotesShowed = new Set();
@@ -38,13 +30,6 @@ const OrderBook = () => {
   const [totalSellSizeArr, setTotalSellSizeArr] = useState([]);
   const [totalBuySizeArr, setTotalBuySizeArr] = useState([]);
 
-  const { currentPrice, previousPrice } = useGetCurrentPrice();
-
-  useEffect(() => {
-    console.log(currentPrice, previousPrice);
-  }, [currentPrice, previousPrice]);
-
-  // const displayedSellQuotes = sellQuotes.slice(0, 8);
   const displayedSellQuotes = useMemo(
     () =>
       sellQuotes
@@ -64,8 +49,8 @@ const OrderBook = () => {
   );
 
   useEffect(() => {
-    // console.log(displayedSellQuotes);
     const totalArr = [];
+
     for (let i = displayedSellQuotes.length - 1; i >= 0; i--) {
       // caculate total size
       totalArr[i] =
@@ -76,30 +61,10 @@ const OrderBook = () => {
       sellQuotesShowed.add(displayedSellQuotes[i].price);
     }
     setTotalSellSizeArr(totalArr);
-    // console.log(totalArr);
-
-    // displayedSellQuotes.forEach((item, i) => {
-    //   // caculate total size
-    //   totalArr[i] = i === 0 ? +item.size : totalArr[i - 1] + +item.size;
-    //   // see if the price showed before
-    //   sellQuotesShowed.add(item.price);
-    // });
   }, [displayedSellQuotes]);
 
   useEffect(() => {
-    // console.log(displayedSellQuotes);
     const totalArr = [];
-    // for (let i = displayedSellQuotes.length - 1; i >= 0; i--) {
-    //   // caculate total size
-    //   totalArr[i] =
-    //     i === displayedSellQuotes.length - 1
-    //       ? +displayedSellQuotes[i].size
-    //       : totalArr[i + 1] + +displayedSellQuotes[i].size;
-    //   // see if the price showed before
-    //   sellQuotesShowed.add(displayedSellQuotes[i].price);
-    // }
-    // setTotalSellSizeArr(totalArr);
-    // console.log(totalArr);
 
     displayedBuyQuotes.forEach((item, i) => {
       // caculate total size
@@ -112,7 +77,6 @@ const OrderBook = () => {
 
   const getSellWidthPercentage = (value) => {
     const p = Math.ceil((value / totalSellSizeArr[0]) * 100);
-    // console.log(value / totalSellSizeArr[0]);
     return { width: `${p}%` };
   };
 
@@ -120,7 +84,6 @@ const OrderBook = () => {
     const p = Math.ceil(
       (value / totalBuySizeArr[totalBuySizeArr.length - 1]) * 100
     );
-    // console.log(value / totalSellSizeArr[0]);
     return { width: `${p}%` };
   };
 
@@ -148,9 +111,7 @@ const OrderBook = () => {
         </div>
       ))}
       {/* current price */}
-      <h3 className="current-price">
-        {addComma(currentPrice && currentPrice.toFixed(1))}
-      </h3>
+      <CurrentPrice />
       {/* buy */}
       {displayedBuyQuotes.map((data, i) => (
         <div className={getBuyQuoteClass(data.price)} key={data.price}>
@@ -165,11 +126,6 @@ const OrderBook = () => {
           </div>
         </div>
       ))}
-      {/* <div className="order-row quote-bar buy-quote">
-        <div className="order-col buy-text">21,731.0</div>
-        <div className="order-col">2,116</div>
-        <div className="order-col">29,027</div>
-      </div> */}
     </div>
   );
 };
