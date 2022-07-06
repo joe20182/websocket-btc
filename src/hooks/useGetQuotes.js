@@ -74,7 +74,7 @@ const useGetQuote = () => {
             });
           }
         });
-        newQuotes.sort((a, b) => a.price - b.price);
+        newQuotes.sort((a, b) => b.price - a.price);
         return newQuotes;
       });
     }

@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import "./index.css";
 import useGetQuote from "../../hooks/useGetQuotes";
+import useGetCurrentPrice from "../../hooks/useGetCurrentPrice";
 import { addComma } from "../../utils/format";
 
 // const displayedSellQuotes = [
@@ -36,6 +37,12 @@ const OrderBook = () => {
   const { sellQuotes, buyQuotes } = useGetQuote();
   const [totalSellSizeArr, setTotalSellSizeArr] = useState([]);
   const [totalBuySizeArr, setTotalBuySizeArr] = useState([]);
+
+  const { currentPrice, previousPrice } = useGetCurrentPrice();
+
+  useEffect(() => {
+    console.log(currentPrice, previousPrice);
+  }, [currentPrice, previousPrice]);
 
   // const displayedSellQuotes = sellQuotes.slice(0, 8);
   const displayedSellQuotes = useMemo(
@@ -140,7 +147,10 @@ const OrderBook = () => {
           </div>
         </div>
       ))}
-      <h3 className="current-price">21,678.0</h3>
+      {/* current price */}
+      <h3 className="current-price">
+        {addComma(currentPrice && currentPrice.toFixed(1))}
+      </h3>
       {/* buy */}
       {displayedBuyQuotes.map((data, i) => (
         <div className={getBuyQuoteClass(data.price)} key={data.price}>
