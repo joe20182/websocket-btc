@@ -4,6 +4,11 @@
   color: var(--text-color);
   padding-bottom: 10px;
 }
+.title {
+  text-align: left;
+  font-size: 18px;
+  padding: 0 10px;
+}
 .order-book .quote-td {
   color: var(--th-color);
 }

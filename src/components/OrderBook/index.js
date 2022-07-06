@@ -10,7 +10,7 @@ const OrderBook = () => {
   return (
     <div className="order-book">
       {/* title */}
-      <h2>Order Book</h2>
+      <h2 className="title">Order Book</h2>
       {/* table head */}
       <div className="order-row quote-td">
         <div className="order-col">Price (USD)</div>
