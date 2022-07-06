@@ -64,7 +64,7 @@
   justify-content: center;
   align-items: center;
   margin: 5px 0;
-  padding: 8px 0;
+  padding: 8px 0 8px 28px;
   background-color: var(--buy-acc-bar-bg);
 }
 .arrow-svg {
@@ -75,7 +75,7 @@
   background-color: rgba(134, 152, 170, 0.12);
 }
 .current-price.same .arrow-svg {
-  display: none;
+  visibility: hidden;
 }
 .current-price.increase {
   color: var(--buy-text-color);
