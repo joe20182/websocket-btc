@@ -2,7 +2,7 @@
   width: 360px;
   background-color: var(--main-bg-color);
   color: var(--text-color);
-  padding: 0 20px;
+  /* padding: 0 20px; */
 }
 .order-book .quote-td {
   color: var(--th-color);
@@ -10,6 +10,7 @@
 .order-row {
   display: flex;
   gap: 5px;
+  padding: 0 20px;
 }
 .quote-bar {
   transition: 0.2s;
@@ -63,6 +64,40 @@
 }
 .buy-quote .percentage-bar {
   background-color: var(--buy-acc-bar-bg);
+}
+.current-price {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  margin: 5px 0;
+  padding: 8px 0;
+  background-color: var(--buy-acc-bar-bg);
+}
+.arrow-svg {
+  margin-left: 4px;
+}
+.current-price.same {
+  color: var(--text-color);
+  background-color: rgba(134, 152, 170, 0.12);
+}
+.current-price.same .arrow-svg {
+  display: none;
+}
+.current-price.increase {
+  color: var(--buy-text-color);
+  background-color: var(--buy-acc-bar-bg);
+}
+.current-price.increase .arrow-svg {
+  stroke: var(--buy-text-color);
+  transform: rotateX(180deg);
+}
+.current-price.decrease {
+  color: var(--sell-text-color);
+  background-color: var(--sell-acc-bar-bg);
+}
+.current-price.decrease .arrow-svg {
+  stroke: var(--sell-text-color);
 }
 @keyframes flashRed {
   0% {
